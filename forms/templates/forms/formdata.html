@@ -1,0 +1,46 @@
+{% load i18n %}
+<h1 id="entries-title">{% trans "Entries" %}</h1>
+    {% for row in data0.row %}
+    {% if forloop.first %}
+    <table id="entries-table">
+        <tr>
+            {% if can_delete_entries %}
+            <th class="include-all"><input type="checkbox"></th>
+            {% endif %}
+            {% for column in data7.columns %}
+            <th{% if forloop.last %} class="last"{% endif %}>{{ column }}</th>
+            {% endfor %}
+        </tr>
+    {% endif %}
+        <tr class="{% cycle "on" "off" %}">
+            {% if can_delete_entries %}
+            <td class="include">
+                <input type="checkbox" name="selected" value="{{ row.0 }}">
+            </td>
+            {% endif %}
+            {% for field in row %}
+            {% if not forloop.first %}
+            <td{% if forloop.last %} class="last"{% endif %}>{{ field }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+    {% if forloop.last %}
+    </table>
+    <!--
+    count is injected into the title here with the :after selector
+    to avoid calling the expensive "entries_form.rows" twice.
+    -->
+    <style>#entries-title:after {content: ' ({{ forloop.counter }})';}</style>
+    {% if can_delete_entries %}
+    <input type="submit" name="back" class="button" value="{% trans "Back to form" %}">
+    <input type="submit" name="delete" class="button default" value="{% trans "Delete selected" %}">
+    {% endif %}
+    {% endif %}
+    {% empty %}
+    <p class="empty">{% trans "No entries to display" %}</p>
+    {% endfor %}
+
+
+{% for objects in object_list %}
+    {{ objects.value }}
+{% endfor %}
